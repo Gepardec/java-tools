@@ -12,8 +12,6 @@ import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gepardec.javatools.commons.PropertyUtils;
-
 import uk.co.jemos.podam.api.AbstractRandomDataProviderStrategy;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;

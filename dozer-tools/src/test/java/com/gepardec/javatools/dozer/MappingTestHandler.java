@@ -11,6 +11,8 @@ import org.dozer.DozerBeanMapper;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
+import com.gepardec.javatools.dozer.MappingChecker;
+
 public class MappingTestHandler extends TestWatcher{
 	
 	private DozerBeanMapper mapper;

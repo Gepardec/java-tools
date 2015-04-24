@@ -1,4 +1,4 @@
-package com.gepardec.javatools.commons;
+package com.gepardec.javatools.dozer;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
