@@ -4,17 +4,18 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.dozer.DozerBeanMapper;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
-import com.gepardec.javatools.dozer.MappingChecker;
-
 public class MappingTestHandler extends TestWatcher{
 	
 	private DozerBeanMapper mapper;
 	private MappingChecker transformationChecker;
+	private Map<String, Object> customFieldValues;
 	
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -26,6 +27,7 @@ public class MappingTestHandler extends TestWatcher{
 	public MappingTestHandler(DozerBeanMapper mapper) {
 		this.mapper = mapper;
 		transformationChecker = new MappingChecker();
+		setCustomFieldValues(new HashMap<String, Object>());
 	}
 	
 	@Override
@@ -34,7 +36,20 @@ public class MappingTestHandler extends TestWatcher{
 		if(transformationTest == null){
 			return;
 		}
+		transformationChecker.setCustomFieldValues(customFieldValues);
 		transformationChecker.checkLossless(mapper, transformationTest.from(), transformationTest.to());	
     }
+
+	public Map<String, Object> getCustomFieldValues() {
+		return customFieldValues;
+	}
+
+	public void setCustomFieldValues(Map<String, Object> customFieldValues) {
+		this.customFieldValues = customFieldValues;
+	}
+	
+	public void ignoreField(String field){
+		customFieldValues.put(field, null);
+	}
 
 }

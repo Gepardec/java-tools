@@ -12,6 +12,8 @@ import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gepardec.javatools.commons.PropertyUtils;
+
 import uk.co.jemos.podam.api.AbstractRandomDataProviderStrategy;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
@@ -44,10 +46,12 @@ public class MappingChecker{
 	
 	private Log logLevel;
 	private Map<Class<?>, CustomGenerator<?>> customGenerators;
+	private Map<String, Object> customFieldValues;
 	
 	public MappingChecker(Log logLevel) {
 		this.logLevel = logLevel;
 		customGenerators = new HashMap<Class<?>, CustomGenerator<?>>();
+		customFieldValues = new HashMap<String, Object>();
 	}
 	
 	public MappingChecker() {
@@ -63,6 +67,14 @@ public class MappingChecker{
 		customGenerators.clear();
 	}
 	
+	public Map<String, Object> getCustomFieldValues() {
+		return customFieldValues;
+	}
+
+	public void setCustomFieldValues(Map<String, Object> customFieldValues) {
+		this.customFieldValues = customFieldValues;
+	}
+	
 	/**
 	 * Checks, whether Dozer Transformation ClassL->ClassR is lossless.
 	 * Transformation is lossless iff l==l' at the transformation l->r->l'
@@ -70,11 +82,12 @@ public class MappingChecker{
 	public <L, R> void checkLossless(Mapper mapper, Class<? extends L> leftClass, Class<? extends R> rightClass){
 		L original = FACTORY.manufacturePojo(leftClass);
 		applyCustomGenerators(original);
+		applyCustomFieldValues(original);
 		R right = mapper.map(original, rightClass);
 		L transformed = mapper.map(right, leftClass);
 		
 		if(! objectEquals(original, transformed, right)){
-			throw new AssertionError("Mapping Error from " + leftClass + " to " + rightClass + " :mapping is not lossless");
+			throw new AssertionError("Nicht verlustfreie Mapping von " + leftClass + " in " + rightClass);
 		}
 	}
 	
@@ -129,6 +142,21 @@ public class MappingChecker{
 			return;
 		}
 	}
+	
+	private void applyCustomFieldValues(Object original){
+		for(String field : customFieldValues.keySet()){
+			Object value = customFieldValues.get(field);
+			try {
+				PropertyUtils.setProperty(original, field, value);
+			} catch (NoSuchFieldException | SecurityException
+					| IllegalArgumentException | IllegalAccessException e) {
+				LOG.error("Fehler beim Setzen von custom Feld " + field + "=" + value, e);
+				e.printStackTrace();
+				throw new AssertionError("Fehler beim Setzen von custom Feld " + field + "=" + value);
+			}
+		}
+	}
+	
 	private <T> boolean objectEquals(T object1, T object2, Object destination){
 		String str1 = GsonPrinter.prettyString(object1);
 		String str2 = GsonPrinter.prettyString(object2);
