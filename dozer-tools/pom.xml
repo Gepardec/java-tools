@@ -35,6 +35,12 @@
 			<artifactId>podam</artifactId>
 			<version>5.1.0.RELEASE</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.gepardec.javatools</groupId>
+			<artifactId>common-tools</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 	</dependencies>
 	<build>

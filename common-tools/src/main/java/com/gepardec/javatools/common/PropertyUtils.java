@@ -1,4 +1,4 @@
-package com.gepardec.javatools.dozer;
+package com.gepardec.javatools.common;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -8,6 +8,11 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class PropertyUtils {
+	
+	public static interface TypeConverter{
+		public Object convertTo(Class<?> toClass);
+	}
+	
 	private static final Pattern ARRAY_ELEMENT = Pattern.compile("^(@?\\w+)\\[(-?\\d+)\\]$");
 	@SuppressWarnings("rawtypes")
 	public static Object getProperty(Object object, String path) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
@@ -37,7 +42,18 @@ public class PropertyUtils {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public static void setProperty(Object object, String path, Object value) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
+	/**
+	 * Sets value to the property in object
+	 * @param object object under operation
+	 * @param path path to the property. May be nested and support indecies
+	 * @param value value to be set
+	 * @param create true if nested objects must be created in case when they are not initialized
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public static void setProperty(Object object, String path, Object value, boolean create) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, InstantiationException{
 		if(path == null || object == null){
 			throw new IllegalArgumentException("Input parameter can not be null");
 		}
@@ -58,14 +74,26 @@ public class PropertyUtils {
 			currentField.setAccessible(true);
 			fieldParent = loopObject;
 			loopObject = currentField.get(loopObject);
+			if(loopObject == null && create){
+				loopObject = currentField.getType().newInstance();
+				currentField.set(fieldParent, loopObject);
+			}
 			if(index >=0 && loopObject instanceof Collection){
 				fieldParent = loopObject;
 				loopObject = ((Collection)loopObject).toArray()[index];
 			}
 		}
 		
+		if(value instanceof TypeConverter){
+			currentField.set(fieldParent, ((TypeConverter)value).convertTo(currentField.getType()));
+			return;
+		}
 		currentField.set(fieldParent, value);
 		
+	}
+	
+	public static void setProperty(Object object, String path, Object value) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, InstantiationException{
+		setProperty(object, path, value, false);		
 	}
 	
 	/**

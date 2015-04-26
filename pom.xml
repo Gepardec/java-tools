@@ -31,5 +31,6 @@
 	</build>
 	<modules>
 		<module>dozer-tools</module>
+		<module>common-tools</module>
 	</modules>
 </project>

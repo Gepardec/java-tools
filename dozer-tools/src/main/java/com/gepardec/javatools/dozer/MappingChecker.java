@@ -16,6 +16,8 @@ import uk.co.jemos.podam.api.AbstractRandomDataProviderStrategy;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
+import com.gepardec.javatools.common.PropertyUtils;
+
 /**
  * Checks Lossless of dozer transformation
  * @author eerofeev
@@ -147,7 +149,7 @@ public class MappingChecker{
 			try {
 				PropertyUtils.setProperty(original, field, value);
 			} catch (NoSuchFieldException | SecurityException
-					| IllegalArgumentException | IllegalAccessException e) {
+					| IllegalArgumentException | IllegalAccessException | InstantiationException e) {
 				LOG.error("Fehler beim Setzen von custom Feld " + field + "=" + value, e);
 				e.printStackTrace();
 				throw new AssertionError("Fehler beim Setzen von custom Feld " + field + "=" + value);
