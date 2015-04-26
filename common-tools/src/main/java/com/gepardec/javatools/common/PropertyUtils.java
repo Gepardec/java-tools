@@ -62,6 +62,7 @@ public class PropertyUtils {
 		Object loopObject = object;
 		Object fieldParent = object;
 		Field currentField = null;
+		int currentDepth = 0;
 		for(String fieldName : fields){
 			int index = -1;
 			String field = fieldName;
@@ -75,13 +76,16 @@ public class PropertyUtils {
 			fieldParent = loopObject;
 			loopObject = currentField.get(loopObject);
 			if(loopObject == null && create){
-				loopObject = currentField.getType().newInstance();
+				if(currentDepth < (fields.length - 1)){
+					loopObject = currentField.getType().newInstance();
+				}
 				currentField.set(fieldParent, loopObject);
 			}
 			if(index >=0 && loopObject instanceof Collection){
 				fieldParent = loopObject;
 				loopObject = ((Collection)loopObject).toArray()[index];
 			}
+			currentDepth ++;
 		}
 		
 		if(value instanceof TypeConverter){
