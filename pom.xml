@@ -32,5 +32,6 @@
 	<modules>
 		<module>dozer-tools</module>
 		<module>common-tools</module>
+		<module>webtail</module>
 	</modules>
 </project>

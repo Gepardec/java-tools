@@ -87,7 +87,7 @@ public class MappingChecker{
 		L transformed = mapper.map(right, leftClass);
 		
 		if(! objectEquals(original, transformed, right)){
-			throw new AssertionError("Nicht verlustfreie Mapping von " + leftClass + " in " + rightClass);
+			throw new AssertionError("Not lossless mapping from " + leftClass + " to " + rightClass);
 		}
 	}
 	
@@ -150,9 +150,9 @@ public class MappingChecker{
 				PropertyUtils.setProperty(original, field, value);
 			} catch (NoSuchFieldException | SecurityException
 					| IllegalArgumentException | IllegalAccessException | InstantiationException e) {
-				LOG.error("Fehler beim Setzen von custom Feld " + field + "=" + value, e);
+				LOG.error("Error at setting of custom field " + field + "=" + value, e);
 				e.printStackTrace();
-				throw new AssertionError("Fehler beim Setzen von custom Feld " + field + "=" + value);
+				throw new AssertionError("Error at setting of custom field " + field + "=" + value);
 			}
 		}
 	}

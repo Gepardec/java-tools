@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+	<meta name="viewport" content="width=device-width" />
+	<link rel="stylesheet" type="text/css" href="css/webtail.css">
+	<script src='js/webtail.js'></script>
+	<title>Webtail</title>
+</head>
+<body body onload="init()">
+	<textarea id="mainarea" readonly="readonly"></textarea>
+	<span>Perform tail of <input id="path" value="${jboss.server.log.dir}/server.log" onchange="pathChanged();"/> file</span> or <a href="" id="downloadlink" target="_blank">download</a> it<br>
+	<span>Initially show last <input id="nrOfChars" value="1000"/> characters of log</span><br>
+	<button id="btnStart" onclick="start();">Start tail</button><br>
+	<button id="btnStop" onclick="stop();">Stop tail</button>
+	<button id="btnClear" onclick="clearLog();">Clear log</button>
+</body>
+</html>

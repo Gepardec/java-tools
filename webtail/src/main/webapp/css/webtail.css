@@ -1,0 +1,18 @@
+#mainarea {
+	display: block;
+	width: 90%;
+	height: 400px;
+	overflow: auto;
+	font-family: monospace;
+	border: 1px solid grey;
+	padding: 5px;
+	margin: 5px;
+}
+
+#nrOfChars {
+	width: 70px;
+}
+
+#path {
+	width: 400px;
+}
