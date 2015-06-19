@@ -1,6 +1,7 @@
 package com.gepardec.javatools.testing.dozer;
 
 import org.dozer.DozerBeanMapper;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ public class DTOTransformationTest {
 		handler.ignoreField("header");
 	}
 	
-	@Test @MappingTest(where=PersonDTOV3.class, isPartOf=Person.class)
+	@Ignore @Test @MappingTest(where=PersonDTOV3.class, isPartOf=Person.class)
 	public void testPersonV3Mapping(){
 	}
 	
