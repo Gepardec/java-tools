@@ -8,5 +8,5 @@ Prerequisites
 
 Content
 -------
-* Dozer transformation verification tool.
+* Testing tools: Dozer transformation verification tool.
 * Webtail: tails log files on web server via web browser
